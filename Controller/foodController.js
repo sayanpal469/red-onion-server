@@ -18,7 +18,7 @@ const createFood = async (req, res) => {
 const getAllFoods = async (req, res) => {
     try {
         const foods = await Foods.find()
-        if(!foods){
+        if (!foods) {
             res.status(404).json({
                 success: false,
                 message: 'foods not found'
@@ -38,8 +38,9 @@ const getAllFoods = async (req, res) => {
 
 const getFoodById = async (req, res) => {
     try {
+        console.log(req.params.id)
         const food = await Foods.findById(req.params.id);
-        if(!food) {
+        if (!food) {
             res.status(404).json({
                 success: false,
                 message: 'food not found'
@@ -51,7 +52,36 @@ const getFoodById = async (req, res) => {
             food
         })
     } catch (error) {
-        
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+const getFoodByCategory = async (req, res) => {
+    try {
+        // const foodCategory = req.params.category
+        // console.log(foodCategory);
+        const food = await Foods.find({
+            category: req.params.category
+        })
+
+        if (!food) {
+            res.status(404).json({
+                success: false,
+                message: 'Food not found'
+            })
+        }
+
+        res.status(201).json({
+            success: true,
+            food
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
     }
 }
 
@@ -61,5 +91,6 @@ const getFoodById = async (req, res) => {
 module.exports = {
     createFood,
     getAllFoods,
-    getFoodById
+    getFoodById,
+    getFoodByCategory
 }
